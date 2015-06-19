@@ -40,12 +40,12 @@ function WeemoExtension() {
             useJquery: true,
             mode_parameter: 'plugin_webrtc'
         };
-        this.rtcc = new Rtcc('', '', 'internal', options);
+        //this.rtcc = new Rtcc('', '', 'internal', options);
     } else {
         var options = {
             mode_parameter: 'plugin_webrtc'
         };
-        this.rtcc = new Rtcc('', '', 'internal', options);
+        //this.rtcc = new Rtcc('', '', 'internal', options);
     }
 
   } catch (err) {
@@ -710,7 +710,10 @@ WeemoExtension.prototype.attachWeemoToPopups = function() {
           if (weemoExtension.hasOneOneCallPermission(targetUser.trim()) === "false") {
             eXo.ecm.VideoCalls.showReceivingPermissionInterceptor(targetFullname.trim());
           } else {
-            weemoExtension.createWeemoCall(targetUser.trim(), targetFullname.trim());
+            //
+            // weemoExtension.createWeemoCall(targetUser.trim(), targetFullname.trim());
+            window.open('/portal/intranet/videocallpopup?callee=' + targetUser.trim() + '&mode=one', "MyWindow", "top=100, left=100,toolbar=no, menubar=no,scrollbars=no,resizable=no,location=no,directories=no,status=no, height=300, width=500");
+
           }
         }
       } else if(!jqchat(this).hasClass("disabled")) {
@@ -980,6 +983,8 @@ var weemoExtension = new WeemoExtension();
     weemoExtension.isTurnOffForUser = $notificationApplication.attr("data-weemo-turnoff-user");
     weemoExtension.isTurnOffForGroupCall = $notificationApplication.attr("data-weemo-turnoff-group");
     weemoExtension.isSameUserLogged = $notificationApplication.attr("is-same-user-logged");
+    weemoExtension.cometdUserToken = $notificationApplication.attr("cometd-user-token");
+    weemoExtension.cometdContextName = $notificationApplication.attr("cometd-context-name");
 
     var isNotInstallWeemoPlugin = weemoExtension.getCookie("isNotInstallWeemoPlugin");
 
@@ -1013,6 +1018,10 @@ var weemoExtension = new WeemoExtension();
     weemoExtension.attachWeemoToPopups();
     weemoExtension.attachWeemoToConnections();
     weemoExtension.attachWeemoToProfile();
+
+    window.require(["SHARED/SightCallNotification"], function(sightCallNotification) {
+      SightCallNotification.initCometd(weemoExtension.username, weemoExtension.cometdUserToken, weemoExtension.cometdContextName);
+    });
 
     if (weemoExtension.isCloudRunning === "true") {
       $(".startVideoCall").on("click", function () {
