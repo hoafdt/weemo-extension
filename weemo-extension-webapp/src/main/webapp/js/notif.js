@@ -712,7 +712,7 @@ WeemoExtension.prototype.attachWeemoToPopups = function() {
           } else {
             //
             // weemoExtension.createWeemoCall(targetUser.trim(), targetFullname.trim());
-            window.open('/portal/intranet/videocallpopup?callee=' + targetUser.trim() + '&mode=one', "MyWindow", "top=100, left=100,toolbar=no, menubar=no,scrollbars=no,resizable=no,location=no,directories=no,status=no, height=300, width=500");
+            weemoExtension.showVideoPopup('/portal/intranet/videocallpopup?callee=' + targetUser.trim() + '&mode=one');
 
           }
         }
@@ -910,6 +910,14 @@ WeemoExtension.prototype.displayVideoCallOnTopNav = function() {
     this.changeStatus("Red");
   }
 
+};
+
+WeemoExtension.prototype.showVideoPopup = function(url) {
+  var w = Math.floor(screen.width * 0.7 );
+  var h = Math.floor(screen.height * 0.7 );
+  var left = (screen.width/2)-(w/2);
+  var top = (screen.height/2)-(h/2);
+  window.open(url, 'Video Call', 'toolbar=no, menubar=no,scrollbars=no,resizable=no,location=no,directories=no,status=no, width='+w+', height='+h+', top='+top+', left='+left);
 };
 
 
