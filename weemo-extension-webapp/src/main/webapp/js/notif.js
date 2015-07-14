@@ -232,32 +232,12 @@ WeemoExtension.prototype.hangup = function() {
   }
 };
 
-WeemoExtension.prototype.changeStatus = function(status) {
-  var $weemoStatus = jqchat(".uiNotifWeemoIcon");
-  if (typeof status === "undefined") {
-    $weemoStatus.removeClass("uiNotifWeemoGreen");
-    return;
-  }
-  $weemoStatus.removeClass("uiNotifWeemoRed");
-  $weemoStatus.removeClass("uiNotifWeemoBlue");
-  $weemoStatus.removeClass("uiNotifWeemoWarning");
-  $weemoStatus.removeClass("uiNotifWeemoGreen");
-
-  if (weemoExtension.isSameUserLogged === 'true') {
-    $weemoStatus.addClass("uiNotifWeemoWarning");
-  } else {
-    $weemoStatus.addClass("uiNotifWeemo" + status);
-  }
-
-}
-
 /**
  * Init Weemo Call
  * @param $uid
  * @param $name
  */
 WeemoExtension.prototype.initCall = function($uid, $name) {
-  this.displayVideoCallOnTopNav();
 
   if (this.weemoKey!=="" && this.rtcc !== undefined) {
     jqchat(".btn-weemo-conf").css('display', 'none');
@@ -271,7 +251,6 @@ WeemoExtension.prototype.initCall = function($uid, $name) {
         weemoExtension.connectedWeemoDriver = true;
         weemoExtension.setInstallWeemoDriver();
         //this.authenticate();
-        weemoExtension.changeStatus("Blue");
 
         if (weemoExtension.hasChatMessage() && (chatApplication !== undefined)) {
           var roomToCheck = weemoExtension.chatMessage.room;
@@ -368,7 +347,6 @@ WeemoExtension.prototype.initCall = function($uid, $name) {
     this.rtcc.on('cloud.sip.ok', function() {
         if (weemoExtension.rtcc.getConnectionMode() === "plugin" || weemoExtension.rtcc.getConnectionMode() === "webrtc") {
             weemoExtension.isConnected = true;
-            weemoExtension.changeStatus("Green");
 
             var fn = jqchat(".label-user").text();
             var fullname = jqchat("#UIUserPlatformToolBarPortlet > a:first").text().trim();
@@ -389,7 +367,6 @@ WeemoExtension.prototype.initCall = function($uid, $name) {
     this.rtcc.on('cloud.sip.ko', function() {
         if (weemoExtension.rtcc.getConnectionMode() === "plugin" || weemoExtension.rtcc.getConnectionMode() === "webrtc") {
         weemoExtension.isConnected = false;
-        weemoExtension.changeStatus("Warning");
       }
     });
 
@@ -551,8 +528,6 @@ WeemoExtension.prototype.initCall = function($uid, $name) {
     } else if (fn!=="") {
       this.rtcc.setDisplayName(fn); // Configure the display name
     }
-    this.changeStatus("Red");
-
   }
 };
 
@@ -895,21 +870,6 @@ WeemoExtension.prototype.attachWeemoToConnections = function() {
       });
 
   setTimeout(function() { weemoExtension.attachWeemoToConnections() }, 500);
-};
-
-WeemoExtension.prototype.displayVideoCallOnTopNav = function() {
-  if (typeof chatNotification === 'undefined') {
-    return;
-  }
-
-  var $uiNotifChatIcon = jqchat(".uiNotifChatIcon");
-  var $uiNotifWeemoIcon = jqchat(".uiNotifWeemoIcon", $uiNotifChatIcon);
-
-  if ($uiNotifWeemoIcon.length === 0 ) {
-    $uiNotifChatIcon.append("<span class=\"uiNotifWeemoIcon\"></span>");
-    this.changeStatus("Red");
-  }
-
 };
 
 WeemoExtension.prototype.showVideoPopup = function(url) {
