@@ -97,7 +97,7 @@ public class VideoCallApplication {
       tokenKey = videoCallService_.getTokenKey();
     }
 
-    if (tokenKey == null) {
+    if (StringUtils.isEmpty(tokenKey)) {
       String profile_id = PropertyManager.getProperty(PropertyManager.PROPERTY_VIDEO_PROFILE);
       AuthService authService = new AuthService();
       String content = authService.authenticate(null, profile_id);
@@ -107,8 +107,8 @@ public class VideoCallApplication {
         httpSession.setAttribute("tokenKey", tokenKey);
         videoCallService_.setTokenKey(tokenKey);
       } else {
-        tokenKey = "";
-        videoCallService_.setTokenKey("");
+        tokenKey = StringUtils.EMPTY;
+        videoCallService_.setTokenKey(StringUtils.EMPTY);
       }
     }
 
